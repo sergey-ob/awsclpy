@@ -16,8 +16,12 @@ class AWSCLPy(object):
 
     def service_command(self, command, subcommand, *parameters):
         parameters = flatten(parameters)
-        args = ['aws', '--output', 'json', '--profile', self.profile, command, subcommand]
+        if self.profile:
+            args = ['aws', '--output', 'json', '--profile', self.profile, command, subcommand]
+        else:
+            args = ['aws', '--output', 'json', command, subcommand]
         args.extend(parameters)
+        args = [x for x in args if x is not None] 
 
         if self.quiet == False:
             label = ('Dry-' if self.dry_run else '') + 'Running ';
